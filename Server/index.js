@@ -1,13 +1,13 @@
 const http = require("http")
-const data = require("./utils/data")
+const {getCharById} = require("./controllers/getChardBYId")
+const port = 3001;
 
-http.createServer((res, req) =>{
+const server = http.createServer((res, req) =>{
     res.setHeader('Access-Control-Allow-Origin', '*');
-    if (req.url.includes("/rickandmorty/character")){   
-        const urll = req.url
-        const characterId = parseInt(urll?.split("/rickandmorty/character")[1])
-        const pjElegido = data.filter((chara) => chara.id === characterId)
-        res.write(200, {"Content-Type":"application/JSON"})
-        return res.end(JSON.stringify(pjElegido))
+    if (req.url.includes("/rickandmorty/character")){ 
+        const id = req.url.split("/").at(-1)  
+        getCharById(res, +id)
         }
-    }).listen(3001,"localhost")
+    });
+    
+    server.listen(port,"localhost")
