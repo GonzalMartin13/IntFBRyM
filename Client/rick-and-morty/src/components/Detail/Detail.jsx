@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Footer from "../Footer/footer"
 
 export default function Detail() {
     const {id} = useParams();
@@ -8,7 +9,7 @@ export default function Detail() {
     const [character, setCharacter] = useState({});
     
     useEffect(() => {
-        axios("http://localhost:3001/rickandmorty/character/${id}").then(({ data }) => {
+        axios(`https://rickandmortyapi.com/api/character/${id}`).then(({ data }) => {
            if (data.name) {
               setCharacter(data);
            } else {
@@ -19,15 +20,17 @@ export default function Detail() {
      }, [id]);
 
     return (
-        <div>
-            <h2>Nombre: {character.name} </h2>
-            <h2>Estado: {character.status}</h2>
-            <h2>Especie: {character.species}</h2>
-            <h2>Genero:  {character.gender}</h2>
-            <h2>Origen: {character.origin?.name}</h2>
-            <img src={character.image} alt={character.id} /> 
-            
-
+        <div className="card text-center m-5 pt-2 bg-dark" data-bs-theme="dark">
+            <h1 className="pt-2">{character.name} </h1>
+            <img className="card-img-top" src={character.image} alt={character.id} /> 
+            <div className="card-body text-success">
+                <h4>Estado: {character.status}</h4>
+                <h4>Especie: {character.species}</h4>
+                <h4>Genero:  {character.gender}</h4>
+                <h4>Origen: {character.origin?.name}</h4>
+            </div>
+            <hr />
+            <Footer/>
         </div>
     );
 }

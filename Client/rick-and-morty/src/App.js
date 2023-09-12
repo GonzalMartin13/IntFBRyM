@@ -10,19 +10,22 @@ import Detail from './components/Detail/Detail';
 import Error from './components/Error404/Error';
 import LoginForm from './components/login/Login';
 
+
 function App() {
 
 const [characters, setCharacters] = useState([])
 
 const onSearch = (id) => {
-   axios("http://localhost:3001/rickandmorty/character/${id}")
+   axios(`https://rickandmortyapi.com/api/character/${id}`)
    .then(({ data }) => {
-      if (data.name) {
+      const repetidos = characters.filter(char => id === char.id)
+      if (repetidos) {
          setCharacters((oldChars) => [...oldChars, data]);
       } else {
          alert('¡No hay personajes con este ID!');
-      }
+      } 
    });
+
 }
 
 function onClose(id){
@@ -41,15 +44,17 @@ function random (){
       <div className = 'App'>
 
          {location.pathname !== "/" && (<Nav onSearch = {onSearch} random={random}/>)}
+
+
          <Routes> 
 
             <Route path='/about' element={<About/>}/>
             <Route path='/' element={<LoginForm/>}/>
-            <Route path="/home" element={<Cards characters = {characters} onClose = {onClose} />}/>
+            <Route path="/home" element={<Cards className="" characters = {characters} onClose = {onClose} />}/>
             <Route path='/detail/:id' element={<Detail/>}/>
             <Route path="*" element={<Error/>}/>
          </Routes>
-{/*          <Cards characters = {characters} onClose = {onClose} /> */}
+         
       </div>
    );
 }
