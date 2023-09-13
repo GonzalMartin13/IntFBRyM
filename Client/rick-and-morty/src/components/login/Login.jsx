@@ -1,23 +1,8 @@
 import { useState } from "react";
+import { validateEmail , validatePassword } from "./validate";
+import {Link} from "react-router-dom"
 
-function validate(user){
-    let errors = {}
-    if (!user.email){
-        errors.mail = "ingresa el mail"
-    }
-    if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(user.email)){
-        errors.mail = "Email invalido"
-    }
-    if (user.email.length > 35){
-        errors.mail = "Invalid Mail"
-    }
-    if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/.test(user.password)){
-        errors.password = "Contraseña Incorrecta"
-    }
-    return errors;
-}
-
-function LoginForm() {
+function LoginForm({login}) {
     const [user,setUser] = useState({
         email:"",
         password:"",
@@ -27,38 +12,49 @@ function LoginForm() {
         password:"",
     })
 
-    function handleChange(event){
-        setUser({
-            ...user,
-            [event.target.name] : event.target.value
-        })
-
-        setErrors(validate({
-            ...user,
-            [event.target.name] : event.target.value
-        }) 
-
-        )
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser({ ...user, [name]: value });
+        
+        // Validar campos en tiempo real
+        if (name === 'email') {
+          setErrors({ ...errors, email: validateEmail(value) });
+        } else if (name === 'password') {
+          setErrors({ ...errors, password: validatePassword(value) });
+        }
+      };
+      const handleSubmit = (e) => {
+        e.preventDefault(user);   
+        if(!errors.email && !errors.password){
+            login(user)
+        }else {
+            alert("Ta todo mal")
+        }
+      };
     return ( 
-        <div>
-            <div><h1>Ingresa a la cuenta</h1></div>
-
-            <form type="submit">
-                <div>
-                    <label>Usuario</label>
-                    <input type="email" name="usuario"  value={user.email} onChange={handleChange}/>
-                </div>
+        <div className="card m-5  pt-2 col-md-6 " data-bs-theme="dark">
+        <h1 className="pt-2">Welcome to Rick and Morty </h1>
+        <h4>La Rick-idex que capaz necesitabas</h4>
+        <form type="submit" onSubmit={handleSubmit}>
+            <div>
+            <input className="mt-3" placeHolder="Usuario o Email" type="email" id="email" name="email" value={user.email} onChange={handleChange} />
+      {errors.email && <div className="error">{errors.email}</div>}
+            </div>
                 {errors.email && <span>{errors.email}</span>}
-                <div>
-                    <label>Contraseña</label>
-                    <input type="password" name="password" value={user.password} onChange={handleChange}/>
-                </div>
-                {errors.password && <span>{errors.password}</span>}
-                <button type="submit"> Sing In </button>
-            </form>
-        </div>
+            <div>
+            <input className="my-3" placeHolder="Contraseña" type="password" id="password" name="password" value={user.password} onChange={handleChange} />
+      {errors.password && <div className="error">{errors.password}</div>}
+            </div>
+            {errors.password && <span>{errors.password}</span>}
+             <div className="mt-2">
+                <Link to="/home">
+                    <button className="btn btn-outline-success focus-ring focus-ring-success mx-2 my-3" type="submit"> Sing In </button>
+                </Link>
+            </div> 
+        </form>
+    </div>
     );
 }
 
 export default LoginForm;
+
