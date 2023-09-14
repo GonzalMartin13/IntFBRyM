@@ -1,15 +1,16 @@
 import Card from '../Card/Card';
-import Footer from '../Footer/footer';
 
-export default function Cards(props) {
-   const {onClose} = props
-   const {characters} = props
+
+export default function Cards({characters, onClose}) {
+
    return (
       <div className="row mx-5">
-         {characters.map((character) => 
-         (<Card  characters = {character} onClose={onClose}/>
+         {characters?.map((character) => 
+         (<div className="card text-center my-1 col-3 col-g-6 pt-2 bg-dark" key={character.id}>  
+         <Card characters= {character} onClose={onClose}/>
+         </div>
          ))}
-         <Footer/>
+         
       </div>
    );
 }

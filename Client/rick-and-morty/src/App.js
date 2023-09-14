@@ -28,7 +28,7 @@ function login(user) {
 
 useEffect(() => {
    !access && navigate('/');
-}, [access]);
+}, [access],);
 
 
 const onSearch = (id) => {
